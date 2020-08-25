@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags-->
+    <script>
+
+        //Display profile
+        function getprofile()
+         {
+           engID= localStorage.getItem("username");
+           const displayname = document.getElementById('displayname');
+           displayname.textContent = engID ;
+
+            // var engineerid = localStorage.getItem('username');
+           
+            
+            // getautoincident = (engineerid) => {
+            //     var dt = new Date();
+            //     year = dt.getYear() + 1900;
+            //     month = (dt.getMonth() + 1).toString().padStart(2, "0");
+            //     day = dt.getDate().toString().padStart(2, "0");
+            //     console.log(engineerid + day + month + year);
+            //     var autoincidentid = engineerid + day + month + year;
+
+            //     const incidentid = document.getElementById('incidentid');
+            //     incidentid.value = autoincidentid;
+            // }  
+        
+            // getautoincident(engineerid);
+        }
+
+            
+          
+
+        //creating a new incident
+        function createincident()
+        {
+                const myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
+                console.log("createincident endpoint called");
+                const apiPayload = {
+                                   
+                                    TITLE: document.getElementById('TITLE').value,
+                                    DESCRIPTION: document.getElementById('DESCRIPTION').value,
+                                    INCIDENTDATE: document.getElementById('INCIDENTDATE').value,
+                                    INCIDENTTIME: document.getElementById('INCIDENTTIME').value,
+                                    PERSONINJURED: document.getElementById('PERSONINJURED').value,
+                                    CONTACTMAIL: document.getElementById('CONTACTMAIL').value,
+                                    WITNESSNAME: document.getElementById('WITNESSNAME').value,
+                                    WITNESSMAIL: document.getElementById('WITNESSMAIL').value,
+                                    LOCATION: document.getElementById('LOCATION').value,
+                                    WORKAREA: document.getElementById('WORKAREA').value,
+                                    ACTION: document.getElementById('ACTION').value,
+                                }
+                const raw = JSON.stringify(apiPayload);
+                console.log(raw);
+                
+                const requestOptions = {
+                    method: 'POST',
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: 'follow'
+                };
+
+                
+ 
+                fetch("http://localhost:8000/incidentcreate", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        
+
+                        console.log(result.Message._text);
+                        if(result.Message!=null)
+                        {console.log("Incident created successfully!");
+                        document.getElementById("successmsg").style.visibility = "visible";
+                        setTimeout(() => {
+                                document.getElementById("successmsg").style.opacity = 0;
+                        }, 2000);
+                        }
+                        else
+                        {
+                         console.log("Failed to create new Incident!");
+                         document.getElementById("failuremsg").style.visibility = "visible";
+                        setTimeout(() => {
+                                document.getElementById("failuremsg").style.opacity = 0;
+                        }, 2000);
+                        }
+
+                    
+                    })
+                    .catch(error => {
+                        console.log('error', error);
+                        document.getElementById("failuremsg").style.visibility = "visible";
+                        setTimeout(() => {
+                                document.getElementById("failuremsg").style.opacity = 0;
+                        }, 2000);
+                    })
+                            
+                    
+                   
+
+        };
+
+function logout(){
+    localStorage.clear();
+    console.log("token is cleared");
+    setTimeout(() => {
+                    window.location.href = '/';
+    }, 2000);
+}
+
+
+</script>
+    <!-- Title Page-->
+    <title>New Incident Request</title>
+
+    <!-- Fontfaces CSS-->
+    <link href="css/font-face.css" rel="stylesheet" media="all">
+    <link href="vendor/font-awesome-5/css/fontawesome-all.min.css" rel="stylesheet" media="all">
+    <link href="vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <link href="vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+
+    <!-- Bootstrap CSS-->
+    <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
+
+    <!-- Vendor CSS-->
+    <link href="vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
+    <link href="vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet" media="all">
+    <link href="vendor/wow/animate.css" rel="stylesheet" media="all">
+    <link href="vendor/css-hamburgers/hamburgers.min.css" rel="stylesheet" media="all">
+    <link href="vendor/slick/slick.css" rel="stylesheet" media="all">
+    <link href="vendor/select2/select2.min.css" rel="stylesheet" media="all">
+    <link href="vendor/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet" media="all">
+
+    <!-- Main CSS-->
+    <link href="css/theme.css" rel="stylesheet" media="all">
+    <link rel="icon" type="image/png" href="forms/images/icon/favicon.png">
+    <link rel="icon" type="image/png" href="images/icon/favicon.png">
+</head>
+
+<body onload="getprofile()" class="animsition">
+<div class="page-wrapper">
+    <!-- HEADER MOBILE-->
+    <header class="header-mobile d-block d-lg-none">
+        <div class="header-mobile__bar">
+            <div class="container-fluid">
+                <div class="header-mobile-inner">
+                    <a class="logo" href="index.html">
+                        <img src="images/icon/logo.png" alt="Kaar Portal solutions" />
+                    </a>
+                    <button class="hamburger hamburger--slider" type="button">
+                        <span class="hamburger-box">
+                            <span class="hamburger-inner"></span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <nav class="navbar-mobile">
+            <div class="container-fluid">
+                <ul class="list-unstyled navbar__list">
+                    <li class="has-sub">
+                        <a class="js-arrow" href="#">
+                            <i class="fas fa-tachometer-alt"></i>Dashboard</a>
+
+                    </li>
+
+                    <li class="has-sub">
+                        <a class="js-arrow" href="#">
+                            <i class="fas fa-caret-down"></i>Incident Control</a>
+                        <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                            <li>
+                                <a id="" href="createincident.html">
+                                    <i class="fas fa-check-square"></i>Create Incident</a>
+                            </li>
+                            <li>
+                                <a href="displayincident.html">
+                                    <i class="fas fa-chart-bar"></i>Display Incident</a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a id="" href="displayrisk.html">
+                            <i class="fas fa-warning"></i>Display Risk Assessment</a>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <!-- END HEADER MOBILE-->
+
+    <!-- MENU SIDEBAR-->
+    <aside class="menu-sidebar d-none d-lg-block">
+        <div class="logo">
+            <a class="logo" href="dashboard.html">
+                <img src="images/icon/logo.png" alt="Kaar Portal solutions" />
+            </a>
+        </div>
+        <div class="menu-sidebar__content js-scrollbar1">
+            <nav class="navbar-sidebar">
+                <ul class="list-unstyled navbar__list">
+                    <li class="has-sub">
+                        <a class="js-arrow" href="#">
+                            <i class="fas fa-tachometer-alt"></i>Dashboard</a>
+
+                    </li>
+
+                    <li class="has-sub">
+                        <a class="js-arrow" href="#">
+                            <i class="fas fa-caret-down"></i>Incident Control</a>
+                        <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                            <li>
+                                <a id="" href="createincident.html">
+                                    <i class="fas fa-check-square"></i>Create Incident</a>
+                            </li>
+                            <li>
+                                <a href="displayincident.html">
+                                    <i class="fas fa-chart-bar"></i>Display Incident</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                    <li>
+                        <a id="" href="displayrisk.html">
+                            <i class="fas fa-warning"></i>Display Risk Assessment</a>
+                    </li>
+
+                </ul>
+            </nav>
+        </div>
+
+
+    </aside>
+    <!-- END MENU SIDEBAR-->
+
+    <!-- PAGE CONTAINER-->
+    <div class="page-container">
+        <!-- HEADER DESKTOP-->
+        <header class="header-desktop">
+            <div class="section__content section__content--p30">
+                <div class="container-fluid">
+                    <div class="header-wrap">
+
+                        <form class="form-header" action="" method="POST">
+                            <p><a href="dashboard.html"><i class="fa fa-home"> &nbsp; </i>EHSM Portal </a> / Create
+                                Incident</p>
+                            <!-- <input class="au-input au-input--xl" type="text" id="invoice" name="search" placeholder="" /> -->
+                        </form>
+                        <div class="row-md-12">
+                            <form action="displayincident.html">
+                                <button class="au-btn au-btn-icon au-btn--green au-btn--small">
+                                    <i class="fa fa-list"></i>View all Incidents</button>
+                            </form>
+                        </div>
+
+
+                        <div class="header-button">
+                    
+                            <div class="account-wrap">
+                                <div class="account-item clearfix js-item-menu">
+                                    <div class="image">
+                                        <img src="images/icon/avatar-01.png" alt="UserImage" />
+                                    </div>
+                                    <div class="content">
+                                        <a class="js-acc-btn" href="#">Me</a>
+                                    </div>
+                                    <div class="account-dropdown js-dropdown">
+                                        <div class="info clearfix">
+                                            <div class="image">
+                                                <a href="#">
+                                                    <img src="images/icon/avatar-01.png" alt="UserImage" />
+                                                </a>
+                                            </div>
+                                            <div class="content">
+                                                <h5 class="name">
+                                                    Employee ID :
+                                                </h5>
+                                                <p id="displayname"></p>
+
+                                            </div>
+                                        </div>
+                                        <div class="account-dropdown__body">
+                                            <!-- <div class="account-dropdown__item">
+<a href="#">
+<i class="zmdi zmdi-account"></i>Profile Settings</a>
+</div> -->
+                                            <!-- <div class="account-dropdown__item">
+<a href="#">
+<i class="zmdi zmdi-settings"></i>Setting</a>
+</div>
+<div class="account-dropdown__item">
+<a href="#">
+<i class="zmdi zmdi-money-box"></i>Billing</a>
+</div> -->
+                                        </div>
+                                        <div class="account-dropdown__footer">
+                                            <a href="#" onclick="logout()">
+                                                <i class="zmdi zmdi-power" onclick="logout()"></i>Logout</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- HEADER DESKTOP-->
+
+        <!-- MAIN CONTENT-->
+        <div class="main-content">
+            <!-- <div class="section__content section__content--p30"> -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <strong>Incident</strong>
+                                <small> Recording</small>
+                            </div>
+
+
+                            <div class="card-body card-block">
+
+
+                                <div class="row form-group">
+
+                                    <div class="col-12">
+                                        <label for="vat" class=" form-control-label"><strong>Title</strong>*</label>
+                                        <input type="text" maxlength="30" required id="TITLE"
+                                            placeholder="About the injury" class="form-control">
+                                    </div>
+
+                                </div>
+
+
+
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <label for="Address"
+                                            class=" form-control-label"><strong>Description</strong></label>
+                                    </div>
+                                    <div class="col-12 col-md-9">
+                                        <textarea name="textarea-input" id="DESCRIPTION" maxlength="150" rows="3"
+                                            class="form-control"
+                                            placeholder="More details about the incident"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">
+
+                                    <div class="col-6">
+                                        <label class="form-control-label"><strong>Person injured</strong></label>
+                                        <input type="text" maxlength="30" required id="PERSONINJURED"
+                                            placeholder="Name of the person" class="form-control">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-control-label"><strong>Emergency Email</strong></label>
+                                        <input type="text" maxlength="30" required id="CONTACTMAIL"
+                                            placeholder="Email of the person" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <label for="Address" class=" form-control-label"><strong>First
+                                                Response</strong></label>
+                                    </div>
+                                    <div class="col-12 col-md-9">
+                                        <textarea name="textarea-input" id="ACTION" maxlength="150" rows="3"
+                                            class="form-control" placeholder="Action done"></textarea>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="card-block">
+
+                            <div class="card-body card-block ">
+
+                                <p id="successmsg" style="visibility: hidden;" class="alert alert-success" role="alert">
+                                    Incident successfully Created.
+                                </p>
+                                <p id="failuremsg" style="visibility: hidden;" class="alert alert-danger" role="alert">
+                                    Failed to create new Incident
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <strong>Details</strong>
+                                <small> About the Witness</small></div>
+                            <div class="card-body card-block">
+
+                                <div class="row form-group">
+
+                                    <div class="col-6">
+                                        <label for="company" class=" form-control-label"><strong>Witness
+                                                name</strong>*</label>
+                                        <input type="text" maxlength="30" required id="WITNESSNAME"
+                                            placeholder="Name of the Witness" class="form-control">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-control-label"><strong>Witness Email</strong></label>
+                                        <input type="text" maxlength="30" required id="WITNESSMAIL"
+                                            placeholder="Email of the Witness" class="form-control">
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="vat" class=" form-control-label"><strong>Location</strong></label>
+                                    <input type="text" maxlength="30" id="LOCATION" placeholder="Eg: Chennai"
+                                        class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="vat" class=" form-control-label"><strong>Work center</strong></label>
+                                    <input type="text" maxlength="30" id="WORKAREA" placeholder="Eg: WOT1"
+                                        class="form-control">
+                                </div>
+
+                                <div class="row form-group">
+
+                                    <div class="col-6">
+                                        <label for="company" class=" form-control-label"><strong>Incident
+                                                date</strong></label>
+                                        <input type="text" maxlength="10" id="INCIDENTDATE" placeholder="Eg:YYYY-MM-DD"
+                                            class="form-control">
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="vat" class=" form-control-label"><strong>Incident
+                                                time</strong></label>
+                                        <input type="text" maxlength="8" id="INCIDENTTIME" placeholder="Eg:HH:MM:SS"
+                                            class="form-control">
+                                    </div>
+                                </div>
+
+
+
+
+                                <div class="card">
+
+                                    <button class="btn btn-primary btn-sm" onclick="createincident()"
+                                        type="submit">Create New
+                                        Incident
+                                        <i class="fa fa-check-square-o"></i>
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="copyright">
+                            <strong>
+                                <p>© Made with love by Siva Prakash!</p>
+                            </strong>
+                            <p>Mentored by Jithya Prasad</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+    <!-- Jquery JS-->
+    <script src="vendor/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap JS-->
+    <script src="vendor/bootstrap-4.1/popper.min.js"></script>
+    <script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
+    <!-- Vendor JS       -->
+    <script src="vendor/slick/slick.min.js">
+    </script>
+    <script src="vendor/wow/wow.min.js"></script>
+    <script src="vendor/animsition/animsition.min.js"></script>
+    <script src="vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
+    </script>
+    <script src="vendor/counter-up/jquery.waypoints.min.js"></script>
+    <script src="vendor/counter-up/jquery.counterup.min.js">
+    </script>
+    <script src="vendor/circle-progress/circle-progress.min.js"></script>
+    <script src="vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="vendor/chartjs/Chart.bundle.min.js"></script>
+    <script src="vendor/select2/select2.min.js">
+    </script>
+
+    <!-- Main JS-->
+    <script src="js/main.js"></script>
+
+
+<!-- <script type="text/javascript" src="../index.js"></script> -->
+
+<script type="text/javascript">
+	function checkToken() {
+		if (!localStorage.getItem('token')) {
+			window.location.href = '/';
+		}
+	}
+
+
+</script>
+</body>
+
+</html>
+<!-- end document-->
+

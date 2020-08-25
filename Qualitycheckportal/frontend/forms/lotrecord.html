@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags-->
+    <link rel="icon" type="image/png" href="images/icon/favicon.png">
+    <script>
+
+        
+
+        //creating a new incident
+        function resultrecord()
+        {
+                const myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
+                console.log("resultrecord endpoint called");
+                const apiPayload = {
+                                   
+                    INSPECTORID: localStorage.getItem('username'),
+                    PLANT : document.getElementById('PLANT').value,
+                    MATERIAL : document.getElementById('MATERIAL').value,
+                    ABOVETR : document.getElementById('ABOVETR').value,
+                    BELOWTR : document.getElementById('BELOWTR').value,
+                    DEFECTIVEQUANTITY : document.getElementById('DEFECTIVEQUANTITY').value,
+                    INSPECTIONID : document.getElementById('INSPECTIONID').value,
+                    SAMPLESIZE : document.getElementById('SAMPLESIZE').value,
+                                }
+                const raw = JSON.stringify(apiPayload);
+                console.log(raw);
+                
+                const requestOptions = {
+                    method: 'POST',
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: 'follow'
+                };
+
+                
+ 
+                fetch("http://localhost:8000/resultrecord", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        
+
+                        console.log(result.Message._text);
+                        if(result.Message!=null)
+                        {console.log("Recording created successfully!");
+                        document.getElementById("successmsg").style.visibility = "visible";
+                        setTimeout(() => {
+                                document.getElementById("successmsg").style.opacity = 0;
+                        }, 2000);
+                        }
+                        else
+                        {
+                         console.log("Failed to create new Recording!");
+                         document.getElementById("failuremsg").style.visibility = "visible";
+                        setTimeout(() => {
+                                document.getElementById("failuremsg").style.opacity = 0;
+                        }, 2000);
+                        }
+
+                    
+                    })
+                    .catch(error => {
+                        console.log('error', error);
+                        document.getElementById("failuremsg").style.visibility = "visible";
+                        setTimeout(() => {
+                                document.getElementById("failuremsg").style.opacity = 0;
+                        }, 2000);
+                    })
+                            
+                    
+                   
+
+        };
+
+function logout(){
+    localStorage.clear();
+    console.log("token is cleared");
+    setTimeout(() => {
+                    window.location.href = '/';
+    }, 2000);
+}
+
+    </script>
+    <!-- Title Page-->
+    <title>Result recordings</title>
+
+    <!-- Fontfaces CSS-->
+    <link href="css/font-face.css" rel="stylesheet" media="all">
+    <link href="vendor/font-awesome-5/css/fontawesome-all.min.css" rel="stylesheet" media="all">
+    <link href="vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <link href="vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+
+    <!-- Bootstrap CSS-->
+    <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
+
+    <!-- Vendor CSS-->
+    <link href="vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
+    <link href="vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet" media="all">
+    <link href="vendor/wow/animate.css" rel="stylesheet" media="all">
+    <link href="vendor/css-hamburgers/hamburgers.min.css" rel="stylesheet" media="all">
+    <link href="vendor/slick/slick.css" rel="stylesheet" media="all">
+    <link href="vendor/select2/select2.min.css" rel="stylesheet" media="all">
+    <link href="vendor/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet" media="all">
+
+    <!-- Main CSS-->
+    <link href="css/theme.css" rel="stylesheet" media="all">
+
+</head>
+
+<body onload="getlotrecordings()" class="animsition">
+    <div class="page-wrapper">
+        <!-- HEADER MOBILE-->
+        <header class="header-mobile d-block d-lg-none">
+            <div class="header-mobile__bar">
+                <div class="container-fluid">
+                    <div class="header-mobile-inner">
+                        <a class="logo" href="index.html">
+                            <img src="images/icon/logo.png" alt="Kaar Portal solutions" />
+                        </a>
+                        <button class="hamburger hamburger--slider" type="button">
+                            <span class="hamburger-box">
+                                <span class="hamburger-inner"></span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <nav class="navbar-mobile">
+                <div class="container-fluid">
+                    <ul class="navbar-mobile__list list-unstyled">
+                        <li class="has-sub">
+                            <a class="js-arrow" href="dashboard.html">
+                                <i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                            
+                        </li>
+
+                        <li class="has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="fas fa-caret-down"></i>LOT</a>
+                            <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                <li>
+                                    <a href="lotdisplay.html">
+                                        <i class="fas fa-columns"></i>Inspection Lot Display</a>
+                                </li>
+                                <li>
+                                    <a href="lotrecord.html">
+                                        <i class="fas fa-file-text"></i>LOT Result Recordings</a>
+                                </li>
+
+                                <li>
+                                    <a id="" href="usagedecision.html">
+                                        <i class="fas fa-flask"></i>Usage Decision</a>
+                                </li>
+                            
+                            </ul>
+                        </li>
+                        
+                        
+                        
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- END HEADER MOBILE-->
+
+        <!-- MENU SIDEBAR-->
+        <aside class="menu-sidebar d-none d-lg-block">
+            <div class="logo">
+                <a href="#">
+                    <img src="images/icon/logo.png" alt="Kaar dashboard"  />
+                </a>
+            </div>
+            <div class="menu-sidebar__content js-scrollbar1">
+                <nav class="navbar-sidebar">
+                    <ul class="list-unstyled navbar__list">
+                        <li class="has-sub">
+                            <a class="js-arrow" href="dashboard.html">
+                                <i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                            
+                        </li>
+                        <li class="has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="fas fa-caret-down"></i>LOT</a>
+                            <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                <li>
+                                    <a href="lotdisplay.html">
+                                        <i class="fas fa-columns"></i>Inspection Lot Display</a>
+                                </li>
+                                <li>
+                                    <a href="lotrecord.html">
+                                        <i class="fas fa-file-text"></i>LOT Result Recordings</a>
+                                </li>
+
+                                <li>
+                                    <a id="" href="usagedecision.html">
+                                        <i class="fas fa-flask"></i>Usage Decision</a>
+                                </li>
+                            
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+           
+        </aside>
+        <!-- END MENU SIDEBAR-->
+
+        <!-- PAGE CONTAINER-->
+        <div class="page-container">
+            <!-- HEADER DESKTOP-->
+            <header class="header-desktop">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="header-wrap">
+                            
+                            <form class="form-header" action="" method="POST">
+                                <p><a href="dashboard.html"><i class="fa fa-home"> &nbsp; </i>QualityChecker Portal  </a> / Display records</p>
+                        <!-- <input class="au-input au-input--xl" type="text" id="invoice" name="search" placeholder="" /> -->
+                            </form>
+                                
+                            
+                            <div class="header-button">
+                               
+                                <div class="account-wrap">
+                                    <div class="account-item clearfix js-item-menu">
+                                        <div class="image">
+                                            <img src="images/icon/avatar-01.png" alt="UserImage" />
+                                        </div>
+                                        <div class="content">
+                                            <a class="js-acc-btn" href="#">Me</a>
+                                        </div>
+                                        <div class="account-dropdown js-dropdown">
+                                            <div class="info clearfix">
+                                                <div class="image">
+                                                    <a href="#">
+                                                        <img src="images/icon/avatar-01.png" alt="UserImage" />
+                                                    </a>
+                                                </div>
+                                                <div class="content">
+                                                    <h5 class="name">Quality Engineer ID:
+                                                        <p id="displayname"></p>
+                                                    </h5>
+                                                    <p id="displayemail" class="email"></p>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="account-dropdown__body">
+                                                <div class="account-dropdown__item">
+                                                    <a href="#">
+                                                        <i class="zmdi zmdi-account"></i>Profile Settings</a>
+                                                </div>
+                                             
+                                            </div> -->
+                                            <div class="account-dropdown__footer">
+                                                <a href="#" onclick="logout()">
+                                                    <i class="zmdi zmdi-power" onclick="logout()"></i>Logout</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- HEADER DESKTOP-->
+                    <div class="main-content">
+                           <div class="section__content section__content--p30">
+
+                                
+                                
+                                    
+                                   
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <strong>Lot</strong>
+                                            <small> Recording</small>
+                                        </div>
+            
+            
+                                        <div class="card-body card-block">
+            
+            
+                                            <div class="row form-group">
+            
+                                                <div class="col-12">
+                                                    <label for="vat" class=" form-control-label"><strong>Plant</strong>*</label>
+                                                    <input type="text" maxlength="4" required id="PLANT"
+                                                        placeholder="SA01" class="form-control">
+                                                </div>
+            
+                                            </div>
+
+                                            <div class="row form-group">
+                                                <div class="col-12">
+                                                    <label for="Address" class=" form-control-label"><strong>Inspection Lot No.</strong></label>
+                                                    <input type="text" maxlength="12" required id="INSPECTIONID" placeholder="150000000052" class="form-control">
+                                                </div>
+                                            </div>
+            
+            
+            
+                                            <div class="row form-group">
+                                                <div class="col-12">
+                                                    <label for="Address" class=" form-control-label"><strong>Material</strong></label>
+                                                    <input type="text" maxlength="16" required id="MATERIAL" placeholder="000000000000000816" class="form-control">
+                                                </div>
+                                            </div>
+            
+                                            
+                                            
+                  
+
+                                            
+            
+                                        </div>
+            
+                                    </div>
+            
+                                    
+                                </div>
+            
+            
+            
+            
+                                <div class="col-lg-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <strong>Specification</strong>
+                                            <small> About the LOT</small></div>
+                                        <div class="card-body card-block">
+                                            
+                                            
+                                            
+                                            <div class="row form-group">
+
+                                                <div class="col-6">
+                                                    <label class="form-control-label"><strong>Sample Size</strong></label>
+                                                    <input type="text" maxlength="6" required id="SAMPLESIZE"
+                                                        placeholder="25" class="form-control">
+                                                </div>
+            
+                                                <div class="col-6">
+                                                    <label for="company" class=" form-control-label"><strong>Defective quantity</strong></label>
+                                                    <input type="text"  maxlength="6" id="DEFECTIVEQUANTITY" placeholder="5" class="form-control">
+                                                </div>
+                                                
+                                            </div>
+
+                                            <div class="row form-group">
+            
+                                                <div class="col-6">
+                                                    <label class="form-control-label"><strong>Above Threshold</strong></label>
+                                                    <input type="text" maxlength="6" required id="ABOVETR"
+                                                        placeholder="20" class="form-control">
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="form-control-label"><strong>Below Threshold</strong></label>
+                                                    <input type="text" maxlength="6" required id="BELOWTR"
+                                                        placeholder="10" class="form-control">
+                                                </div>
+                                            </div>
+
+                                            
+            
+            
+            
+            
+                                            <div class="card">
+            
+                                                <button class="btn btn-primary btn-sm" onclick="resultrecord()"
+                                                    type="submit">Record result for lot
+                                                    <i class="fa fa-check-square-o"></i>
+                                                </button>
+            
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-block">
+            
+                                <div class="card-body card-block ">
+    
+                                    <p id="successmsg" style="visibility: hidden;" class="alert alert-success" role="alert">
+                                        Result recording successfully Created.
+                                    </p>
+                                    <p id="failuremsg" style="visibility: hidden;" class="alert alert-danger" role="alert">
+                                        Failed to create Result recording
+                                    </p>
+                                </div>
+                            </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="copyright">
+                                            <strong><p>© Made with love by Siva Prakash!</p></strong>
+                                            <p>Mentored by Jithya Prasad</p>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    
+                        
+                    </div>
+
+                    
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Jquery JS-->
+    <script src="vendor/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap JS-->
+    <script src="vendor/bootstrap-4.1/popper.min.js"></script>
+    <script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
+    <!-- Vendor JS       -->
+    <script src="vendor/slick/slick.min.js">
+    </script>
+    <script src="vendor/wow/wow.min.js"></script>
+    <script src="vendor/animsition/animsition.min.js"></script>
+    <script src="vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
+    </script>
+    <script src="vendor/counter-up/jquery.waypoints.min.js"></script>
+    <script src="vendor/counter-up/jquery.counterup.min.js">
+    </script>
+    <script src="vendor/circle-progress/circle-progress.min.js"></script>
+    <script src="vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="vendor/chartjs/Chart.bundle.min.js"></script>
+    <script src="vendor/select2/select2.min.js">
+    </script>
+
+    <!-- Main JS-->
+    <script src="js/main.js"></script>
+
+
+<!-- <script type="text/javascript" src="../index.js"></script> -->
+
+<script type="text/javascript">
+	function checkToken() {
+		if (!localStorage.getItem('token')) {
+			window.location.href = '/';
+		}
+	}
+
+
+</script>
+</body>
+
+</html>
+<!-- end document-->

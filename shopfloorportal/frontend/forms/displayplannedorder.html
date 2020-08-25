@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags-->
+    
+    <script>
+
+        //display plannedorder
+        function displayplannedorder() {
+            engID = localStorage.getItem("username");
+            const displayname = document.getElementById('displayname');
+            displayname.textContent = engID;
+
+
+                const myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
+                myHeaders.append("token", localStorage.getItem('token'));
+                console.log("displayplannedorder endpoint called");
+                const raw = JSON.stringify({ plantID: localStorage.getItem('username') });
+                console.log(raw);
+                const requestOptions = {
+                    method: 'POST',
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: 'follow'
+                };
+
+  
+                fetch("http://localhost:8000/planneddisp", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        
+                        for( i in result.planneddisplay)
+                    {   
+                        
+                            for (j in result.planneddisplay[i]) {
+
+                                if (result.planneddisplay[i][j]._text == null) {
+
+                                    result.planneddisplay[i][j]._text = 'N/A'
+                                }
+                            }                           
+                        
+
+                              document.getElementById("spl").innerHTML +='<td>'+ '<div class="table-data-feature"><button class="item" data-toggle="modal" data-target="#scrollmodal"><i data-toggle="tooltip" data-placement="bottom" title="View as Modal" class="fa fa-expand"></i></button><button class="item" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"><i class="fa fa-copy"></i></button></div>'+'</td>'+'<td class="user" title="Order Number">'+ result.planneddisplay[i].PLNUM._text +'</td>'+'<td>'+ result.planneddisplay[i].MATNR._text +'</td>'   +'<td class="process">' + result.planneddisplay[i].PLWRK._text   +'</td>'+ '<td>' + result.planneddisplay[i].PWWRK._text   +'</td>' +'<td>'+ result.planneddisplay[i].PAART._text +'</td>'  +'<td>'+ result.planneddisplay[i].BESKZ._text +'</td>'  +'<td>'+ result.planneddisplay[i].SOBES._text +'</td>'  +'<td class="process">'+ result.planneddisplay[i].GSMNG._text +'</td>' + '<td>'+ result.planneddisplay[i].PSTTR._text +'</td>' + '<td>'+ result.planneddisplay[i].PEDTR._text +'</td>'+ '<td>'+ result.planneddisplay[i].PERTR._text +'</td>'+ '<td class="denied">'+ result.planneddisplay[i].DISPO._text +'</td>'+ '<td>'+ result.planneddisplay[i].AUFNR._text +'</td>'+ '<td>'+ result.planneddisplay[i].PSTMP._text +'</td>'+ '<td '+ (result.planneddisplay[i].PUSER._text =='SIVA'? ' class="process"' : 'class=""') + '>'+ result.planneddisplay[i].PUSER._text +'</td>' ;
+                         
+                         
+                              $(".fa-expand").click(function () {
+                              var $row = $(this).closest("tr"),
+                                  $tds = $row.find("td:nth-child(2)");
+                                 
+                           
+  
+                               $.each($tds, function () {
+                                
+                                localStorage.setItem("currentorder",$(this).text().trim());
+                                displaymodal();
+                                 
+                               });
+                          });
+
+                          $(".fa-copy").click(function () {
+                              console.log("copy button clicked");
+                              var $row = $(this).closest("tr"),
+                                  $tds2 = $row.find("td:nth-child(2)");
+                                
+                           
+  
+                               $.each($tds2, function () {
+                                
+                                
+                                var elementId= $(this).text().trim();
+                                console.log(elementId);
+                                copyToClipboard(elementId)
+                                 
+                               });
+                          });
+                         
+                    };
+  
+                    
+                    })
+                    .catch(error => console.log('error', error));
+  
+        }
+
+function displaymodal() {
+
+console.log("Planned order modal was clicked")
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+const apipayload= {
+    plantID: localStorage.getItem('username'),
+    plnumID : localStorage.getItem('currentorder'),
+   
+}
+
+
+const raw2 = JSON.stringify(apipayload);
+console.log("apipyload is",apipayload)
+const requestOptions2 = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw2,
+    redirect: 'follow'
+};
+
+fetch("http://localhost:8000/planneddisp2", requestOptions2)
+    .then(response => response.json())
+    .then(result => {
+        
+
+        const PLNUM = document.getElementById('PLNUM');
+        PLNUM.textContent=result.PLNUM;                    
+        const MATNR = document.getElementById('MATNR');
+        MATNR.textContent=result.MATNR;
+        const PLWRK = document.getElementById('PLWRK');
+        PLWRK.textContent=result.PLWRK;
+        const PWWRK = document.getElementById('PWWRK');
+        PWWRK.textContent=result.PWWRK;
+        const PAART = document.getElementById('PAART');
+        PAART.textContent=result.PAART;
+        const BESKZ = document.getElementById('BESKZ');
+        BESKZ.textContent=result.BESKZ;
+        const SOBES = document.getElementById('SOBES');
+        SOBES.textContent=result.SOBES;
+        const GSMNG = document.getElementById('GSMNG');
+        GSMNG.textContent=result.GSMNG;
+        const PSTTR = document.getElementById('PSTTR');
+        PSTTR.textContent=result.PSTTR;
+        const PEDTR = document.getElementById('PEDTR');
+        PEDTR.textContent=result.PEDTR;
+        const PERTR = document.getElementById('PERTR');
+        PERTR.textContent=result.PERTR;
+        const DISPO = document.getElementById('DISPO');
+        DISPO.textContent=result.DISPO;
+        const AUFNR = document.getElementById('AUFNR');
+        AUFNR.textContent=result.AUFNR;
+        const PSTMP = document.getElementById('PSTMP');
+        PSTMP.textContent=result.PSTMP;
+        const PUSER = document.getElementById('PUSER');
+        PUSER.textContent=result.PUSER;
+        
+  
+    })
+    .catch(error => console.log('error', error));
+}
+        
+function copyToClipboard(elementId) {
+        // Create a "hidden" input
+        var aux = document.createElement("input");
+        // Assign it the value of the specified element
+        aux.setAttribute("value", elementId);
+        // Append it to the body
+        document.body.appendChild(aux);
+        // Highlight its content
+        aux.select();
+        // Copy the highlighted text
+        document.execCommand("copy");
+        // Remove it from the body
+        document.body.removeChild(aux);
+        alert("Value copied to Clipboard");
+    }
+        
+    function printDiv(divName){
+    var printContents=document.getElementById(divName).innerHTML;
+    w=window.open();
+    w.document.write(printContents);
+    w.print();
+    w.close();
+}
+  
+    function logout(){
+    localStorage.clear();
+    console.log("token is cleared");
+    setTimeout(() => {
+                    window.location.href = '/';
+    }, 1000);
+  }
+
+  
+  
+    </script>
+  
+    <!-- Title Page-->
+    <title>Display Planned Order</title>
+
+    <!-- Fontfaces CSS-->
+    <link href="css/font-face.css" rel="stylesheet" media="all">
+    <link href="vendor/font-awesome-5/css/fontawesome-all.min.css" rel="stylesheet" media="all">
+    <link href="vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <link href="vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+
+    <!-- Bootstrap CSS-->
+    <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
+
+    <!-- Vendor CSS-->
+    <link href="vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
+    <link href="vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet" media="all">
+    <link href="vendor/wow/animate.css" rel="stylesheet" media="all">
+    <link href="vendor/css-hamburgers/hamburgers.min.css" rel="stylesheet" media="all">
+    <link href="vendor/slick/slick.css" rel="stylesheet" media="all">
+    <link href="vendor/select2/select2.min.css" rel="stylesheet" media="all">
+    <link href="vendor/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet" media="all">
+
+    <!-- Main CSS-->
+    <link href="css/theme.css" rel="stylesheet" media="all">
+    <link rel="icon" type="image/png" href="images/icon/favicon.png">
+</head>
+
+<body onload="displayplannedorder()" class="animsition">
+    <div class="page-wrapper">
+        <!-- HEADER MOBILE-->
+        <header class="header-mobile d-block d-lg-none">
+            <div class="header-mobile__bar">
+                <div class="container-fluid">
+                    <div class="header-mobile-inner">
+                        <a class="logo" href="index.html">
+                            <img src="images/icon/logo.png" alt="Kaar Portal solutions" />
+                        </a>
+                        <button class="hamburger hamburger--slider" type="button">
+                            <span class="hamburger-box">
+                                <span class="hamburger-inner"></span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <nav class="navbar-mobile">
+                <div class="container-fluid">
+                    <ul class="list-unstyled navbar__list">
+                        <li class="has-sub">
+                            <a class="js-arrow" href="dashboard.html">
+                                <i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                            
+                        </li>
+
+                        <li class="has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="fas fa-cog"></i>Planned Order</a>
+                            <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                <li>
+                                    <a id="" href="createplannedorder.html">
+                                        <i class="fas fa-check-square"></i>Create PlannedOrder</a>  
+                                </li>
+                                <li>
+                                    <a href="displayplannedorder.html">
+                                        <i class="fas fa-calendar"></i>Display PlannedOrder</a>
+                                </li>
+                                
+                            
+                            </ul>
+                        </li>
+                        
+                        <li class="has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="fas fa-cogs"></i>Production Order</a>
+                            <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                <li>
+                                    <a id="" href="createproductionorder.html">
+                                        <i class="fas fa-check-square"></i>Create productionOrder</a>  
+                                </li>
+                                <li>
+                                    <a href="displayproductionorder.html">
+                                        <i class="fas fa-calendar"></i>Display productionOrder</a>
+                                </li>
+                                
+                            
+                            </ul>
+                        </li>
+                
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- END HEADER MOBILE-->
+
+        <!-- MENU SIDEBAR-->
+        <aside class="menu-sidebar d-none d-lg-block">
+            <div class="logo">
+                <a href="#">
+                    <img src="images/icon/logo.png" alt="Kaar dashboard"  />
+                </a>
+            </div>
+            <div class="menu-sidebar__content js-scrollbar1">
+                <nav class="navbar-sidebar">
+                    <ul class="list-unstyled navbar__list">
+                        <li class="has-sub">
+                            <a class="js-arrow" href="dashboard.html">
+                                <i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                            
+                        </li>
+
+                        <li class="has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="fas fa-cog"></i>Planned Order</a>
+                            <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                <li>
+                                    <a id="" href="createplannedorder.html">
+                                        <i class="fas fa-check-square"></i>Create PlannedOrder</a>  
+                                </li>
+                                <li>
+                                    <a href="displayplannedorder.html">
+                                        <i class="fas fa-calendar"></i>Display PlannedOrder</a>
+                                </li>
+                                
+                            
+                            </ul>
+                        </li>
+                        
+                        <li class="has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="fas fa-cogs"></i>Production Order</a>
+                            <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                <li>
+                                    <a id="" href="createproductionorder.html">
+                                        <i class="fas fa-check-square"></i>Create productionOrder</a>  
+                                </li>
+                                <li>
+                                    <a href="displayproductionorder.html">
+                                        <i class="fas fa-calendar"></i>Display productionOrder</a>
+                                </li>
+                                
+                            
+                            </ul>
+                        </li>
+                
+                    </ul>
+                </nav>
+            </div>
+
+           
+        </aside>
+        <!-- END MENU SIDEBAR-->
+
+        <!-- PAGE CONTAINER-->
+        <div class="page-container">
+            <!-- HEADER DESKTOP-->
+            <header class="header-desktop">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="header-wrap">
+                            <form class="form-header" action="" method="POST">
+                                <p><a href="dashboard.html"><i class="fa fa-home"> &nbsp; </i>Shopfloor Portal  </a> / Display planned order</p>
+                                <!-- <input class="au-input au-input--xl" type="text" id="invoice" name="search" placeholder="" /> -->
+                            </form>
+
+                            <div class="row-md-12">
+                                <form action="createplannedorder.html">
+                                <button class="au-btn au-btn-icon au-btn--green au-btn--small">
+                                <i class="fa fa-list"></i>Create new Planned Order</button>
+                                </form>
+                            </div>
+                            <div class="header-button">
+                                <!-- <div class="noti-wrap">
+                                    <div class="noti__item js-item-menu">
+                                        <i class="zmdi zmdi-comment-more"></i>
+                                        <span class="quantity">1</span>
+                                        <div class="mess-dropdown js-dropdown">
+                                            <div class="mess__title">
+                                                <p>You have 2 news message</p>
+                                            </div>
+                                            <div class="mess__item">
+                                                <div class="image img-cir img-40">
+                                                    <img src="images/icon/avatar-06.jpg" alt="Michelle Moreno" />
+                                                </div>
+                                                <div class="content">
+                                                    <h6>Michelle Moreno</h6>
+                                                    <p>Have sent a photo</p>
+                                                    <span class="time">3 min ago</span>
+                                                </div>
+                                            </div>
+                                            <div class="mess__item">
+                                                <div class="image img-cir img-40">
+                                                    <img src="images/icon/avatar-04.jpg" alt="Diane Myers" />
+                                                </div>
+                                                <div class="content">
+                                                    <h6>Diane Myers</h6>
+                                                    <p>You are now connected on message</p>
+                                                    <span class="time">Yesterday</span>
+                                                </div>
+                                            </div>
+                                            <div class="mess__footer">
+                                                <a href="#">View all messages</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="noti__item js-item-menu">
+                                        <i class="zmdi zmdi-email"></i>
+                                        <span class="quantity">1</span>
+                                        <div class="email-dropdown js-dropdown">
+                                            <div class="email__title">
+                                                <p>You have 3 New Emails</p>
+                                            </div>
+                                            <div class="email__item">
+                                                <div class="image img-cir img-40">
+                                                    <img src="images/icon/avatar-06.jpg" alt="Cynthia Harvey" />
+                                                </div>
+                                                <div class="content">
+                                                    <p>Meeting about new dashboard...</p>
+                                                    <span>Cynthia Harvey, 3 min ago</span>
+                                                </div>
+                                            </div>
+                                            <div class="email__item">
+                                                <div class="image img-cir img-40">
+                                                    <img src="images/icon/avatar-05.jpg" alt="Cynthia Harvey" />
+                                                </div>
+                                                <div class="content">
+                                                    <p>Meeting about new dashboard...</p>
+                                                    <span>Cynthia Harvey, Yesterday</span>
+                                                </div>
+                                            </div>
+                                            <div class="email__item">
+                                                <div class="image img-cir img-40">
+                                                    <img src="images/icon/avatar-04.jpg" alt="Cynthia Harvey" />
+                                                </div>
+                                                <div class="content">
+                                                    <p>Meeting about new dashboard...</p>
+                                                    <span>Cynthia Harvey, April 12,,2018</span>
+                                                </div>
+                                            </div>
+                                            <div class="email__footer">
+                                                <a href="#">See all emails</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="noti__item js-item-menu">
+                                        <i class="zmdi zmdi-notifications"></i>
+                                        <span class="quantity">3</span>
+                                        <div class="notifi-dropdown js-dropdown">
+                                            <div class="notifi__title">
+                                                <p>You have 3 Notifications</p>
+                                            </div>
+                                            <div class="notifi__item">
+                                                <div class="bg-c1 img-cir img-40">
+                                                    <i class="zmdi zmdi-email-open"></i>
+                                                </div>
+                                                <div class="content">
+                                                    <p>You got a email notification</p>
+                                                    <span class="date">April 12, 2018 06:50</span>
+                                                </div>
+                                            </div>
+                                            <div class="notifi__item">
+                                                <div class="bg-c2 img-cir img-40">
+                                                    <i class="zmdi zmdi-account-box"></i>
+                                                </div>
+                                                <div class="content">
+                                                    <p>Your account has been blocked</p>
+                                                    <span class="date">April 12, 2018 06:50</span>
+                                                </div>
+                                            </div>
+                                            <div class="notifi__item">
+                                                <div class="bg-c3 img-cir img-40">
+                                                    <i class="zmdi zmdi-file-text"></i>
+                                                </div>
+                                                <div class="content">
+                                                    <p>You got a new file</p>
+                                                    <span class="date">April 12, 2018 06:50</span>
+                                                </div>
+                                            </div>
+                                            <div class="notifi__footer">
+                                                <a href="#">All notifications</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <div class="account-wrap">
+                                    <div class="account-item clearfix js-item-menu">
+                                        <div class="image">
+                                            <img src="images/icon/avatar-01.png" alt="John Doe" />
+                                        </div>
+                                        <div class="content">
+                                            <a class="js-acc-btn" href="#">Me</a>
+                                        </div>
+                                        <div class="account-dropdown js-dropdown">
+                                            <div class="info clearfix">
+                                                <div class="image">
+                                                    <a href="#">
+                                                        <img src="images/icon/avatar-01.png" alt="John Doe" />
+                                                    </a>
+                                                </div>
+                                                <div class="content">
+                                                    <h5 class="name">
+                                                       Plant ID :
+                                                    </h5>
+                                                    <p id="displayname"></p>
+                                                  
+                                                </div>
+                                            </div>
+                                            <div class="account-dropdown__body">
+                                                <!-- <div class="account-dropdown__item">
+                                                    <a href="#">
+                                                        <i class="zmdi zmdi-account"></i>Account</a>
+                                                </div> -->
+                                                <!-- <div class="account-dropdown__item">
+                                                    <a href="#">
+                                                        <i class="zmdi zmdi-settings"></i>Setting</a>
+                                                </div>
+                                                <div class="account-dropdown__item">
+                                                    <a href="#">
+                                                        <i class="zmdi zmdi-money-box"></i>Billing</a>
+                                                </div> -->
+                                            </div>
+                                            <div class="account-dropdown__footer">
+                                                <a href="#" onclick="logout()">
+                                                    <i class="zmdi zmdi-power" onclick="logout()"></i>Logout</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- HEADER DESKTOP-->
+
+            <div class="modal fade" id="scrollmodal" tabindex="-1" role="dialog" aria-labelledby="scrollmodalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="scrollmodalLabel">Workorder Details</h5>
+                            <button type="button" onclick="erasevalues()" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div id="print-content" style="display: inline-block; text-align: left;">
+                            <form>
+                                <h4> Planned Order Details: </h4><br>
+                                <h5>Planned order number</h5><p id="PLNUM"></p>
+                                <h5>Material</h5><p id="MATNR"></p>
+                                <h5>Planning Plant</h5> <p id="PLWRK"></p>
+                                <h5>Production plant</h5><p id="PWWRK"></p>                                               
+                                <h5>Order type</h5><p id="PAART"></p>
+                                <h5>Procurement Type</h5><p id="BESKZ"></p>
+                                <h5>Special procurement type</h5><p id="SOBES"></p>
+                                <h5>quantity</h5><p id="GSMNG"></p>
+                                <h5>Order start On</h5><p id="PSTTR"></p>
+                                <h5>Order finish On</h5><p id="PEDTR"></p>
+                                <h5>Planned opening date</h5><p id="PERTR"></p>
+                                <h5 >MRP Controller</h5> <p id="DISPO"></p>
+                                <h5>Run schedule header number</h5><p id="AUFNR"></p>                                        
+                                <h5>Time Stamp</h5><p id="PSTMP"></p>
+                                <h5>User </h5><p id="PUSER"></p>
+                         
+                                </div>  
+                                
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Go Back</button>
+                            <button type="button" onclick="printDiv('print-content')" class="btn btn-primary">Print Workorder</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+          
+
+            <!-- MAIN CONTENT-->
+            <div class="main-content">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <!-- <div class="row">
+                            
+                            <div class="card" >
+                                <div class="card-header">
+                                    <strong>Invoice</strong> ID
+                                </div>
+                                <div class="card-body card-block">
+                                    <form action="" method="post" class="form-inline">
+                                        <div class="form-group">
+                                            <label for="exampleInputName2" class="pr-1  form-control-label">Invoice ID</label>
+                                            <input type="text" id="invoice" placeholder="Enter your invoice id" required="" class="form-control">
+                                        </div>
+                                        
+                                    </form>
+                                </div>
+                                <div class="card-footer">
+                                    <button id="submitid" type="submit" class="btn btn-primary btn-sm" onclick="getinvoice()">
+                                        <i class="fa fa-dot-circle-o"></i> Submit  
+                                    </button>
+                                   
+                                </div>
+                            </div>
+                                                        
+                            
+                        </div> -->
+                        <div class="row m-t-30">
+                            <div class="col-md-12">
+                                <!-- DATA TABLE-->
+                                <div class="table-responsive m-b-40">
+                                    <table class="table table-borderless table-data3">
+                                        <thead>
+                                            <tr>
+                                                <th>Action</th>
+                                                <th data-toggle="tooltip" data-placement="top" title="PLNUM">Planned order number</th>                                       
+                                                <th data-toggle="tooltip" data-placement="top" title="MATNR">Material </th>
+                                                <th data-toggle="tooltip" data-placement="top" title="PLWRK">Planning Plant</th>
+                                                <th data-toggle="tooltip" data-placement="top" title="PWWRK">Production plant</th>
+                                                <th data-toggle="tooltip" data-placement="top" title="PAART">Order type</th>
+                                                <th data-toggle="tooltip" data-placement="top" title="BESKZ">Procurement Type</th>
+                                                <th data-toggle="tooltip" data-placement="top" title="SOBES">Special procurement type</th>
+                                                <th data-toggle="tooltip" data-placement="top" title="GSMNG">quantity</th>    
+                                                <th data-toggle="tooltip" data-placement="top" title="PSTTR">Order start On</th>   
+                                                <th data-toggle="tooltip" data-placement="top" title="PEDTR">Order finish On</th>    
+                                                <th data-toggle="tooltip" data-placement="top" title="PERTR">Planned opening date</th>    
+                                                <th data-toggle="tooltip" data-placement="top" title="DISPO">MRP Controller</th>    
+                                                <th data-toggle="tooltip" data-placement="top" title="AUFNR">Run schedule header number</th>    
+                                                <th data-toggle="tooltip" data-placement="top" title="PSTMP">Time Stamp</th>    
+                                                <th data-toggle="tooltip" data-placement="top" title="PUSER">User</th>                                                             
+                                                                                                                         
+                                            </tr>
+                                        </thead>
+                                        <tbody id="spl">
+                                                                                    
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- END DATA TABLE-->
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="copyright">
+                                    <strong><p>© Made with love by Siva Prakash!</p></strong>
+                                    <p>Mentored by Jithya Prasad</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Jquery JS-->
+    <script src="vendor/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap JS-->
+    <script src="vendor/bootstrap-4.1/popper.min.js"></script>
+    <script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
+    <!-- Vendor JS       -->
+    <script src="vendor/slick/slick.min.js">
+    </script>
+    <script src="vendor/wow/wow.min.js"></script>
+    <script src="vendor/animsition/animsition.min.js"></script>
+    <script src="vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
+    </script>
+    <script src="vendor/counter-up/jquery.waypoints.min.js"></script>
+    <script src="vendor/counter-up/jquery.counterup.min.js">
+    </script>
+    <script src="vendor/circle-progress/circle-progress.min.js"></script>
+    <script src="vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="vendor/chartjs/Chart.bundle.min.js"></script>
+    <script src="vendor/select2/select2.min.js">
+    </script>
+
+    <!-- Main JS-->
+    <script src="js/main.js"></script>
+
+
+<script type="text/javascript" src="../index.js"></script>
+
+<script type="text/javascript">
+	function checkToken() {
+		if (!localStorage.getItem('token')) {
+			window.location.href = '/';
+		}
+	}
+
+
+</script>
+</body>
+
+</html>
+<!-- end document-->

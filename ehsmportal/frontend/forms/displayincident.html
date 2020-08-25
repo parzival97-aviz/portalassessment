@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags-->
+    
+    <script>
+
+        //Display profile
+        // function getprofile() {
+        //     getlotinspection();
+        //     const myHeaders = new Headers();
+        //     myHeaders.append("Content-Type", "application/json");
+        //     myHeaders.append("token", localStorage.getItem('token'));
+        //     const raw = JSON.stringify({ engID: localStorage.getItem('username') });
+        //     const requestOptions = {
+        //         method: 'POST',
+        //         headers: myHeaders,
+        //         body: raw,
+        //         redirect: 'follow'
+        //     };
+  
+        //     fetch("http://localhost:8000/lotinspection", requestOptions)
+        //         .then(response => response.json())
+        //         .then(result => {
+  
+        //             const displayname = document.getElementById('displayname');
+        //             displayname.textContent = `${result.emp_name}`;
+        //             const displayemail = document.getElementById('displayemail');
+        //             displayemail.textContent = `${result.emp_email.toLowerCase()}`;
+        //         })
+        //         .catch(error => console.log('error', error));
+        // }
+  
+  
+  
+  
+  
+  
+  
+  // Modal Desc:
+  
+  function getresponse(i) {
+              const myHeaders = new Headers();
+              myHeaders.append("Content-Type", "application/json");
+             const raw2 = JSON.stringify({engID: localStorage.getItem('username')});
+              console.log('EngineerID is:',raw2);
+              console.log(raw2);
+              const requestOptions2 = {
+                  method: 'POST',
+                  headers: myHeaders,
+                  body: raw2,
+                  redirect: 'follow'
+              };
+              
+                  fetch("http://localhost:8000/incidentdisp", requestOptions2)
+                  .then(response => response.json())
+                  .then(result => {
+                    // for( i in result.incidentdisplay)
+                    // {   
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                    //      document.getElementById("inc").innerHTML += '</td>'+ '<td >'+ result.incidentdisplay[i].description._text +'</td>';
+                           
+                         
+                    // };
+                    const incidentid2 = document.getElementById('incidentid2');
+                      incidentid2.textContent = result.incidentdisplay[i].incident_id._text;
+                      const description2 = document.getElementById('description2');
+                      description2.textContent = result.incidentdisplay[i].description._text;
+                      const customer2 = document.getElementById('customer2');
+                      customer2.textContent = result.incidentdisplay[i].customer._text;
+                      const reporter2 = document.getElementById('reporter2');
+                      reporter2.textContent = result.incidentdisplay[i].reporter._text;
+                      const processor2 = document.getElementById('processor2');
+                      processor2.textContent = result.incidentdisplay[i].processor._text;
+                      const serviceteam2 = document.getElementById('serviceteam2');
+                      serviceteam2.textContent = result.incidentdisplay[i].serviceteam._text;
+                      const status2 = document.getElementById('status2');
+                      status2.textContent = result.incidentdisplay[i].status._text;
+                      const priority2 = document.getElementById('priority2');
+                      priority2.textContent = result.incidentdisplay[i].priority._text;
+                      const createdon2 = document.getElementById('createdon2');
+                      createdon2.textContent = result.incidentdisplay[i].createdon._text;
+                      const firstresponse2 = document.getElementById('firstresponse2');
+                      firstresponse2.textContent = result.incidentdisplay[i].firstresponse._text;
+                      const endedon2 = document.getElementById('endedon2');
+                      endedon2.textContent = result.incidentdisplay[i].endedon._text;
+  
+  
+                  })
+                  .catch(error => console.log('error', error));
+  
+  
+  
+          }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+        //display incident
+        function displayincident() {
+                    engID = localStorage.getItem("username");
+            const displayname = document.getElementById('displayname');
+            displayname.textContent = engID;
+
+
+                const myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
+                myHeaders.append("token", localStorage.getItem('token'));
+                console.log("displayincident endpoint called");
+                const raw = JSON.stringify({ engID: localStorage.getItem('username') });
+                console.log(raw);
+                const requestOptions = {
+                    method: 'POST',
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: 'follow'
+                };
+  
+                fetch("http://localhost:8000/incidentdisp", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        
+                      
+                        for( i in result.incidentdisplay)
+                    {   
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+                         document.getElementById("spl").innerHTML += '<td class="user">'+ result.incidentdisplay[i].INCIDENTID._text +'</td>'+ '<td >'+ result.incidentdisplay[i].TITLE._text +'</td>' + '<td class="process">'+ result.incidentdisplay[i].DESCRIPTION._text +'</td>'+ '<td>'+ result.incidentdisplay[i].INCIDENTDATE._text   +'</td>' +'<td>'+ result.incidentdisplay[i].INCIDENTTIME._text +'</td>' +'<td>'+ result.incidentdisplay[i].PERSONINJURED._text +'</td>'  +'<td>'+'<span class="block-email">'+ result.incidentdisplay[i].CONTACTMAIL._text+'</span>' +'</td>' + '<td >'+ result.incidentdisplay[i].WITNESSNAME._text +'</td>'  + '<td>'+'<span class="block-email">'+ result.incidentdisplay[i].WITNESSMAIL._text+'</span>' +'</td>'  + '<td >'+ result.incidentdisplay[i].LOCATION._text +'</td>'  + '<td class="user">'+ result.incidentdisplay[i].WORKAREA._text +'</td>'  + '<td class="denied" >'+ result.incidentdisplay[i].ACTION._text +'</td>'  ;
+                         
+                         
+                         
+                       
+                         $(".btn-sm").click(function () {
+                              var $row = $(this).closest("tr"),
+                                  $tds = $row.find("td:nth-child(2)");
+                                
+                           
+  
+                               $.each($tds, function () {
+                                
+                                localStorage.setItem("currentincident",$(this).text());
+                                console.log(localStorage.getItem("currentincident"));
+                                var current= localStorage.getItem("currentincident");
+                                carrytonextpage(current);
+                                 
+                               });
+  
+  
+                              
+  
+                          });
+                         
+                    };
+  
+                    
+                    })
+                    .catch(error => console.log('error', error));
+  
+        }
+
+ 
+        
+        
+  
+    function logout(){
+    localStorage.clear();
+    console.log("token is cleared");
+    setTimeout(() => {
+                    window.location.href = '/';
+    }, 1000);
+  }
+
+  
+  
+    </script>
+  
+    <!-- Title Page-->
+    <title>Display Incident</title>
+
+    <!-- Fontfaces CSS-->
+    <link href="css/font-face.css" rel="stylesheet" media="all">
+    <link href="vendor/font-awesome-5/css/fontawesome-all.min.css" rel="stylesheet" media="all">
+    <link href="vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <link href="vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+
+    <!-- Bootstrap CSS-->
+    <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
+
+    <!-- Vendor CSS-->
+    <link href="vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
+    <link href="vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet" media="all">
+    <link href="vendor/wow/animate.css" rel="stylesheet" media="all">
+    <link href="vendor/css-hamburgers/hamburgers.min.css" rel="stylesheet" media="all">
+    <link href="vendor/slick/slick.css" rel="stylesheet" media="all">
+    <link href="vendor/select2/select2.min.css" rel="stylesheet" media="all">
+    <link href="vendor/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet" media="all">
+
+    <!-- Main CSS-->
+    <link href="css/theme.css" rel="stylesheet" media="all">
+    <link rel="icon" type="image/png" href="images/icon/favicon.png">
+</head>
+
+<body onload="displayincident()" class="animsition">
+    <div class="page-wrapper">
+        <!-- HEADER MOBILE-->
+        <header class="header-mobile d-block d-lg-none">
+            <div class="header-mobile__bar">
+                <div class="container-fluid">
+                    <div class="header-mobile-inner">
+                        <a class="logo" href="index.html">
+                            <img src="images/icon/logo.png" alt="Kaar Portal solutions" />
+                        </a>
+                        <button class="hamburger hamburger--slider" type="button">
+                            <span class="hamburger-box">
+                                <span class="hamburger-inner"></span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <nav class="navbar-mobile">
+                <div class="container-fluid">
+                    <ul class="list-unstyled navbar__list">
+                        <li class="has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                            
+                        </li>
+
+                        <li class="has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="fas fa-caret-down"></i>Incident Control</a>
+                            <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                <li>
+                                    <a id="" href="createincident.html">
+                                        <i class="fas fa-check-square"></i>Create Incident</a>  
+                                </li>
+                                <li>
+                                    <a href="displayincident.html">
+                                        <i class="fas fa-chart-bar"></i>Display Incident</a>
+                                </li>
+                                                            
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a id="" href="displayrisk.html">
+                                <i class="fas fa-warning"></i>Display Risk Assessment</a>  
+                        </li>
+                        
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- END HEADER MOBILE-->
+
+        <!-- MENU SIDEBAR-->
+        <aside class="menu-sidebar d-none d-lg-block">
+            <div class="logo">
+                <a class="logo" href="dashboard.html">
+                            <img src="images/icon/logo.png" alt="Kaar Portal solutions" />
+                </a>
+            </div>
+            <div class="menu-sidebar__content js-scrollbar1">
+                <nav class="navbar-sidebar">
+                    <ul class="list-unstyled navbar__list">
+                        <li class="has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                            
+                        </li>
+
+                        <li class="has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="fas fa-caret-down"></i>Incident Control</a>
+                            <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                <li>
+                                    <a id="" href="createincident.html">
+                                        <i class="fas fa-check-square"></i>Create Incident</a>  
+                                </li>
+                                <li>
+                                    <a href="displayincident.html">
+                                        <i class="fas fa-chart-bar"></i>Display Incident</a>
+                                </li>
+                                                            
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a id="" href="displayrisk.html">
+                                <i class="fas fa-warning"></i>Display Risk Assessment</a>  
+                        </li>
+                        
+                    </ul>
+                </nav>
+            </div>
+
+           
+        </aside>
+        <!-- END MENU SIDEBAR-->
+
+        <!-- PAGE CONTAINER-->
+        <div class="page-container">
+            <!-- HEADER DESKTOP-->
+            <header class="header-desktop">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="header-wrap">
+                            <form class="form-header" action="" method="POST">
+                                <p><a href="dashboard.html"><i class="fa fa-home"> &nbsp; </i>EHSM Portal  </a> / Display Incident</p>
+                        <!-- <input class="au-input au-input--xl" type="text" id="invoice" name="search" placeholder="" /> -->
+                            </form>
+
+                            <div class="row-md-12">
+                                <form action="createincident.html">
+                                <button class="au-btn au-btn-icon au-btn--green au-btn--small">
+                                <i class="fa fa-list"></i>Create new Incident</button>
+                                </form>
+                            </div>
+                            <div class="header-button">
+                                <!-- <div class="noti-wrap">
+                                    <div class="noti__item js-item-menu">
+                                        <i class="zmdi zmdi-comment-more"></i>
+                                        <span class="quantity">1</span>
+                                        <div class="mess-dropdown js-dropdown">
+                                            <div class="mess__title">
+                                                <p>You have 2 news message</p>
+                                            </div>
+                                            <div class="mess__item">
+                                                <div class="image img-cir img-40">
+                                                    <img src="images/icon/avatar-06.jpg" alt="Michelle Moreno" />
+                                                </div>
+                                                <div class="content">
+                                                    <h6>Michelle Moreno</h6>
+                                                    <p>Have sent a photo</p>
+                                                    <span class="time">3 min ago</span>
+                                                </div>
+                                            </div>
+                                            <div class="mess__item">
+                                                <div class="image img-cir img-40">
+                                                    <img src="images/icon/avatar-04.jpg" alt="Diane Myers" />
+                                                </div>
+                                                <div class="content">
+                                                    <h6>Diane Myers</h6>
+                                                    <p>You are now connected on message</p>
+                                                    <span class="time">Yesterday</span>
+                                                </div>
+                                            </div>
+                                            <div class="mess__footer">
+                                                <a href="#">View all messages</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="noti__item js-item-menu">
+                                        <i class="zmdi zmdi-email"></i>
+                                        <span class="quantity">1</span>
+                                        <div class="email-dropdown js-dropdown">
+                                            <div class="email__title">
+                                                <p>You have 3 New Emails</p>
+                                            </div>
+                                            <div class="email__item">
+                                                <div class="image img-cir img-40">
+                                                    <img src="images/icon/avatar-06.jpg" alt="Cynthia Harvey" />
+                                                </div>
+                                                <div class="content">
+                                                    <p>Meeting about new dashboard...</p>
+                                                    <span>Cynthia Harvey, 3 min ago</span>
+                                                </div>
+                                            </div>
+                                            <div class="email__item">
+                                                <div class="image img-cir img-40">
+                                                    <img src="images/icon/avatar-05.jpg" alt="Cynthia Harvey" />
+                                                </div>
+                                                <div class="content">
+                                                    <p>Meeting about new dashboard...</p>
+                                                    <span>Cynthia Harvey, Yesterday</span>
+                                                </div>
+                                            </div>
+                                            <div class="email__item">
+                                                <div class="image img-cir img-40">
+                                                    <img src="images/icon/avatar-04.jpg" alt="Cynthia Harvey" />
+                                                </div>
+                                                <div class="content">
+                                                    <p>Meeting about new dashboard...</p>
+                                                    <span>Cynthia Harvey, April 12,,2018</span>
+                                                </div>
+                                            </div>
+                                            <div class="email__footer">
+                                                <a href="#">See all emails</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="noti__item js-item-menu">
+                                        <i class="zmdi zmdi-notifications"></i>
+                                        <span class="quantity">3</span>
+                                        <div class="notifi-dropdown js-dropdown">
+                                            <div class="notifi__title">
+                                                <p>You have 3 Notifications</p>
+                                            </div>
+                                            <div class="notifi__item">
+                                                <div class="bg-c1 img-cir img-40">
+                                                    <i class="zmdi zmdi-email-open"></i>
+                                                </div>
+                                                <div class="content">
+                                                    <p>You got a email notification</p>
+                                                    <span class="date">April 12, 2018 06:50</span>
+                                                </div>
+                                            </div>
+                                            <div class="notifi__item">
+                                                <div class="bg-c2 img-cir img-40">
+                                                    <i class="zmdi zmdi-account-box"></i>
+                                                </div>
+                                                <div class="content">
+                                                    <p>Your account has been blocked</p>
+                                                    <span class="date">April 12, 2018 06:50</span>
+                                                </div>
+                                            </div>
+                                            <div class="notifi__item">
+                                                <div class="bg-c3 img-cir img-40">
+                                                    <i class="zmdi zmdi-file-text"></i>
+                                                </div>
+                                                <div class="content">
+                                                    <p>You got a new file</p>
+                                                    <span class="date">April 12, 2018 06:50</span>
+                                                </div>
+                                            </div>
+                                            <div class="notifi__footer">
+                                                <a href="#">All notifications</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <div class="account-wrap">
+                                    <div class="account-item clearfix js-item-menu">
+                                        <div class="image">
+                                            <img src="images/icon/avatar-01.png" alt="John Doe" />
+                                        </div>
+                                        <div class="content">
+                                            <a class="js-acc-btn" href="#">Me</a>
+                                        </div>
+                                        <div class="account-dropdown js-dropdown">
+                                            <div class="info clearfix">
+                                                <div class="image">
+                                                    <a href="#">
+                                                        <img src="images/icon/avatar-01.png" alt="John Doe" />
+                                                    </a>
+                                                </div>
+                                                <div class="content">
+                                                    <h5 class="name">
+                                                       Employee ID :
+                                                    </h5>
+                                                    <p id="displayname"></p>
+                                                  
+                                                </div>
+                                            </div>
+                                            <div class="account-dropdown__body">
+                                                <!-- <div class="account-dropdown__item">
+                                                    <a href="#">
+                                                        <i class="zmdi zmdi-account"></i>Account</a>
+                                                </div> -->
+                                                <!-- <div class="account-dropdown__item">
+                                                    <a href="#">
+                                                        <i class="zmdi zmdi-settings"></i>Setting</a>
+                                                </div>
+                                                <div class="account-dropdown__item">
+                                                    <a href="#">
+                                                        <i class="zmdi zmdi-money-box"></i>Billing</a>
+                                                </div> -->
+                                            </div>
+                                            <div class="account-dropdown__footer">
+                                                <a href="#" onclick="logout()">
+                                                    <i class="zmdi zmdi-power" onclick="logout()"></i>Logout</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- HEADER DESKTOP-->
+
+            <!-- <div class="modal fade" id="scrollmodal" tabindex="-1" role="dialog" aria-labelledby="scrollmodalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="scrollmodalLabel">Vendor Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                
+                            <div id="print-content" style="display: inline-block; text-align: left;">
+                            <form>
+                                <h4>Incident ID</h4>
+                                <p id="incidentid2"></p>
+                                <h4>Description</h4>
+                                <p id="description2"></p>
+                                <h4>Customer</h4>
+                                <p id="customer2"></p>
+                                <h4>Reporter</h4>
+                                <p id="reporter2"></p>
+                                <h4>Processor</h4>
+                                <p id="processor2"></p>
+                                <h4>Service Team</h4>
+                                <p id="serviceteam2"></p>
+                                <h4>Status</h4>
+                                <p id="status2"></p>
+                                <h4>Priority</h4>
+                                <p id="priority2"></p>
+                                <h4>Created On</h4>
+                                <p id="createdon2"></p>
+                                <h4>First Response</h4>
+                                <p id="firstresponse2"></p>
+                                <h4>Ended On</h4>
+                                <p id="endedon2"></p> 
+                                
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Go Back</button>
+                            <button type="button" onclick="printDiv('print-content')" class="btn btn-primary">Print Invoice</button>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- MAIN CONTENT-->
+            <div class="main-content">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <!-- <div class="row">
+                            
+                            <div class="card" >
+                                <div class="card-header">
+                                    <strong>Invoice</strong> ID
+                                </div>
+                                <div class="card-body card-block">
+                                    <form action="" method="post" class="form-inline">
+                                        <div class="form-group">
+                                            <label for="exampleInputName2" class="pr-1  form-control-label">Invoice ID</label>
+                                            <input type="text" id="invoice" placeholder="Enter your invoice id" required="" class="form-control">
+                                        </div>
+                                        
+                                    </form>
+                                </div>
+                                <div class="card-footer">
+                                    <button id="submitid" type="submit" class="btn btn-primary btn-sm" onclick="getinvoice()">
+                                        <i class="fa fa-dot-circle-o"></i> Submit  
+                                    </button>
+                                   
+                                </div>
+                            </div>
+                                                        
+                            
+                        </div> -->
+                        <div class="row m-t-30">
+                            <div class="col-md-12">
+                                <!-- DATA TABLE-->
+                                <div class="table-responsive m-b-40">
+                                    <table class="table table-borderless table-data3">
+                                        <thead>
+                                            <tr>
+                                                
+                                                <th>Incident ID</th>
+                                                <th>Title</th>
+                                                <th>Description</th>
+                                                <th>Incident date</th>
+                                                <th>Incident Time</th>
+                                                <th>Person Injured</th>
+                                                <th>Contact Email</th>
+                                                <th>Witness</th>
+                                                <th>Witness Email</th> 
+                                                <th>Location</th>
+                                                <th>Workarea</th>
+                                                <th>First Response</th>
+                                                
+                                                                                                                         
+                                            </tr>
+                                        </thead>
+                                        
+                                        <tbody id="spl">
+                                          
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- END DATA TABLE-->
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="copyright">
+                                    <strong><p>© Made with love by Siva Prakash!</p></strong>
+                                    <p>Mentored by Jithya Prasad</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Jquery JS-->
+    <script src="vendor/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap JS-->
+    <script src="vendor/bootstrap-4.1/popper.min.js"></script>
+    <script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
+    <!-- Vendor JS       -->
+    <script src="vendor/slick/slick.min.js">
+    </script>
+    <script src="vendor/wow/wow.min.js"></script>
+    <script src="vendor/animsition/animsition.min.js"></script>
+    <script src="vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
+    </script>
+    <script src="vendor/counter-up/jquery.waypoints.min.js"></script>
+    <script src="vendor/counter-up/jquery.counterup.min.js">
+    </script>
+    <script src="vendor/circle-progress/circle-progress.min.js"></script>
+    <script src="vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="vendor/chartjs/Chart.bundle.min.js"></script>
+    <script src="vendor/select2/select2.min.js">
+    </script>
+
+    <!-- Main JS-->
+    <script src="js/main.js"></script>
+
+
+<script type="text/javascript" src="../index.js"></script>
+
+<script type="text/javascript">
+	function checkToken() {
+		if (!localStorage.getItem('token')) {
+			window.location.href = '/';
+		}
+	}
+
+
+</script>
+</body>
+
+</html>
+<!-- end document-->

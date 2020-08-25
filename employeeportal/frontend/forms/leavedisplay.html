@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags-->
+    <script>
+
+        //Display profile
+        function getprofile() {
+            getleave();
+            const myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+            myHeaders.append("token", localStorage.getItem('token'));
+            const raw = JSON.stringify({ EmpID: localStorage.getItem('username') });
+            const requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+
+            fetch("http://localhost:8000/employeeprofile", requestOptions)
+                .then(response => response.json())
+                .then(result => {
+
+                    const displayname = document.getElementById('displayname');
+                    displayname.textContent = `${result.emp_name}`;
+                    const displayemail = document.getElementById('displayemail');
+                    displayemail.textContent = `${result.emp_email.toLowerCase()}`;
+                })
+                .catch(error => console.log('error', error));
+        }
+
+        //display leave
+        function getleave() {
+                const myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
+                myHeaders.append("token", localStorage.getItem('token'));
+                console.log("Getleave endpoint called");
+                const raw = JSON.stringify({ EmpID: localStorage.getItem('username') });
+                console.log(raw);
+                const requestOptions = {
+                    method: 'POST',
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: 'follow'
+                };
+
+                fetch("http://localhost:8000/employeeleavedisplay", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        
+                        for( i in result.leaveresponse)
+                    {   
+                       
+                        console.log(result.leaveresponse[i].LEAVE_ID._text);
+                        console.log(result.leaveresponse[i].EMP_ID._text);
+                        console.log(result.leaveresponse[i].EMP_NAME._text);
+                        console.log(result.leaveresponse[i].EMP_DEPT._text);
+                        console.log(result.leaveresponse[i].LEAVE_TYPE._text);
+                        console.log(result.leaveresponse[i].EMAIL_TO._text);
+                        console.log(result.leaveresponse[i].REASON._text);
+                        console.log(result.leaveresponse[i].DATE_FROM._text);
+                        console.log(result.leaveresponse[i].DATE_TO._text);
+                        
+                        
+                         document.getElementById("spl").innerHTML += '</td>'+ '<td class="process">'+ result.leaveresponse[i].LEAVE_ID._text +'</td>' +'<td>'+ result.leaveresponse[i].DATE_FROM._text +'</td>' +'<td >'+ result.leaveresponse[i].DATE_TO._text +'</td>'+ '<td>' + result.leaveresponse[i].LEAVE_TYPE._text +'</td>' +'<td><span class="block-email">'+ result.leaveresponse[i].EMAIL_TO._text +'</span></td>' +'<td class="user">'+ result.leaveresponse[i].REASON._text +'</td>'   ;
+                         
+                       
+
+                        };
+                    
+                    })
+                    .catch(error => console.log('error', error));
+
+        }
+
+function logout(){
+    localStorage.clear();
+    console.log("token is cleared");
+    setTimeout(() => {
+                    window.location.href = '/';
+    }, 2000);
+}
+
+
+    </script>
+    <!-- Title Page-->
+    <title>Display LeaveRequests</title>
+
+    <!-- Fontfaces CSS-->
+    <link href="css/font-face.css" rel="stylesheet" media="all">
+    <link href="vendor/font-awesome-5/css/fontawesome-all.min.css" rel="stylesheet" media="all">
+    <link href="vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <link href="vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+
+    <!-- Bootstrap CSS-->
+    <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
+
+    <!-- Vendor CSS-->
+    <link href="vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
+    <link href="vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet" media="all">
+    <link href="vendor/wow/animate.css" rel="stylesheet" media="all">
+    <link href="vendor/css-hamburgers/hamburgers.min.css" rel="stylesheet" media="all">
+    <link href="vendor/slick/slick.css" rel="stylesheet" media="all">
+    <link href="vendor/select2/select2.min.css" rel="stylesheet" media="all">
+    <link href="vendor/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet" media="all">
+
+    <!-- Main CSS-->
+    <link href="css/theme.css" rel="stylesheet" media="all">
+    <link rel="icon" type="image/png" href="images/icon/favicon.png">
+
+</head>
+
+<body onload="getprofile()" class="animsition">
+    <div class="page-wrapper">
+        <!-- HEADER MOBILE-->
+        <header class="header-mobile d-block d-lg-none">
+            <div class="header-mobile__bar">
+                <div class="container-fluid">
+                    <div class="header-mobile-inner">
+                        <a class="logo" href="index.html">
+                            <img src="images/icon/logo.png" alt="Kaar Portal solutions" />
+                        </a>
+                        <button class="hamburger hamburger--slider" type="button">
+                            <span class="hamburger-box">
+                                <span class="hamburger-inner"></span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <nav class="navbar-mobile">
+                <div class="container-fluid">
+                    <ul class="list-unstyled navbar__list">
+                        <li class="has-sub">
+                            <a class="js-arrow" href="dashboard.html">
+                                <i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                            
+                        </li>
+
+                        <li>
+                            <a id="" href="profile.html">
+                                <i class="fas fa-users"></i>Profile</a>
+                                
+                        </li>
+
+                        <li class="has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="fas fa-caret-down"></i>Leave Request</a>
+                            <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                <li>
+                                    <a id="" href="leave.html">
+                                        <i class="fas fa-check-square"></i>Create leaverequest</a>  
+                                </li>
+                                <li>
+                                    <a href="leavedisplay.html">
+                                        <i class="fas fa-calendar"></i>Display leave</a>
+                                </li>
+                                
+                            
+                            </ul>
+                        </li>
+                        
+                        <li>
+                            <a href="salary.html">
+                                <i class="fa fa-money"></i>Salary Payslip</a>
+                        </li>
+                        
+            
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- END HEADER MOBILE-->
+
+        <!-- MENU SIDEBAR-->
+        <aside class="menu-sidebar d-none d-lg-block">
+            <div class="logo">
+                <a href="#">
+                    <img src="images/icon/logo.png" alt="Kaar dashboard"  />
+                </a>
+            </div>
+            <div class="menu-sidebar__content js-scrollbar1">
+                <nav class="navbar-sidebar">
+                    <ul class="list-unstyled navbar__list">
+                        <li class="has-sub">
+                            <a class="js-arrow" href="dashboard.html">
+                                <i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                            
+                        </li>
+
+                        <li>
+                            <a id="" href="profile.html">
+                                <i class="fas fa-users"></i>Profile</a>
+                                
+                        </li>
+
+                        <li class="has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="fas fa-caret-down"></i>Leave Request</a>
+                            <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                <li>
+                                    <a id="" href="leave.html">
+                                        <i class="fas fa-check-square"></i>Create leaverequest</a>  
+                                </li>
+                                <li>
+                                    <a href="leavedisplay.html">
+                                        <i class="fas fa-calendar"></i>Display leave</a>
+                                </li>
+                                
+                            
+                            </ul>
+                        </li>
+                        
+                        <li>
+                            <a href="salary.html">
+                                <i class="fa fa-money"></i>Salary Payslip</a>
+                        </li>
+                        
+            
+                    </ul>
+                </nav>
+            </div>
+
+           
+        </aside>
+        <!-- END MENU SIDEBAR-->
+
+        <!-- PAGE CONTAINER-->
+        <div class="page-container">
+            <!-- HEADER DESKTOP-->
+            <header class="header-desktop">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="header-wrap">
+                            
+                            <form class="form-header" action="" method="POST">
+                                <p><a href="dashboard.html"><i class="fa fa-home"> &nbsp; </i>Employee Portal  </a> / Display Leave</p>
+                        <!-- <input class="au-input au-input--xl" type="text" id="invoice" name="search" placeholder="" /> -->
+                            </form>
+                                <div class="row-md-12">
+                                    <form action="leave.html">
+                                    <button class="au-btn au-btn-icon au-btn--green au-btn--small">
+                                    <i class="zmdi zmdi-plus"></i>Create new Leave Request</button>
+                                    </form>
+                                </div>
+                                
+                                
+                                
+                                                           
+                                    <!-- <input class="au-input au-input--xl" type="text" name="search" id="invoice" placeholder="Enter your Invoice ID..." />
+                                    <button class="btn btn-primary btn-sm"  onclick="getleave()" type="submit">
+                                        <i class="zmdi zmdi-search"></i>
+                                    </button> -->
+                                
+                                
+                            
+                            <div class="header-button">
+                                <!-- <div class="noti-wrap">
+                                    <div class="noti__item js-item-menu">
+                                        <i class="zmdi zmdi-comment-more"></i>
+                                        <span class="quantity">1</span>
+                                        <div class="mess-dropdown js-dropdown">
+                                            <div class="mess__title">
+                                                <p>You have 2 news message</p>
+                                            </div>
+                                            <div class="mess__item">
+                                                <div class="image img-cir img-40">
+                                                    <img src="images/icon/avatar-06.jpg" alt="Michelle Moreno" />
+                                                </div>
+                                                <div class="content">
+                                                    <h6>Michelle Moreno</h6>
+                                                    <p>Have sent a photo</p>
+                                                    <span class="time">3 min ago</span>
+                                                </div>
+                                            </div>
+                                            <div class="mess__item">
+                                                <div class="image img-cir img-40">
+                                                    <img src="images/icon/avatar-04.jpg" alt="Diane Myers" />
+                                                </div>
+                                                <div class="content">
+                                                    <h6>Diane Myers</h6>
+                                                    <p>You are now connected on message</p>
+                                                    <span class="time">Yesterday</span>
+                                                </div>
+                                            </div>
+                                            <div class="mess__footer">
+                                                <a href="#">View all messages</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="noti__item js-item-menu">
+                                        <i class="zmdi zmdi-email"></i>
+                                        <span class="quantity">1</span>
+                                        <div class="email-dropdown js-dropdown">
+                                            <div class="email__title">
+                                                <p>You have 3 New Emails</p>
+                                            </div>
+                                            <div class="email__item">
+                                                <div class="image img-cir img-40">
+                                                    <img src="images/icon/avatar-06.jpg" alt="Cynthia Harvey" />
+                                                </div>
+                                                <div class="content">
+                                                    <p>Meeting about new dashboard...</p>
+                                                    <span>Cynthia Harvey, 3 min ago</span>
+                                                </div>
+                                            </div>
+                                            <div class="email__item">
+                                                <div class="image img-cir img-40">
+                                                    <img src="images/icon/avatar-05.jpg" alt="Cynthia Harvey" />
+                                                </div>
+                                                <div class="content">
+                                                    <p>Meeting about new dashboard...</p>
+                                                    <span>Cynthia Harvey, Yesterday</span>
+                                                </div>
+                                            </div>
+                                            <div class="email__item">
+                                                <div class="image img-cir img-40">
+                                                    <img src="images/icon/avatar-04.jpg" alt="Cynthia Harvey" />
+                                                </div>
+                                                <div class="content">
+                                                    <p>Meeting about new dashboard...</p>
+                                                    <span>Cynthia Harvey, April 12,,2018</span>
+                                                </div>
+                                            </div>
+                                            <div class="email__footer">
+                                                <a href="#">See all emails</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="noti__item js-item-menu">
+                                        <i class="zmdi zmdi-notifications"></i>
+                                        <span class="quantity">3</span>
+                                        <div class="notifi-dropdown js-dropdown">
+                                            <div class="notifi__title">
+                                                <p>You have 3 Notifications</p>
+                                            </div>
+                                            <div class="notifi__item">
+                                                <div class="bg-c1 img-cir img-40">
+                                                    <i class="zmdi zmdi-email-open"></i>
+                                                </div>
+                                                <div class="content">
+                                                    <p>You got a email notification</p>
+                                                    <span class="date">April 12, 2018 06:50</span>
+                                                </div>
+                                            </div>
+                                            <div class="notifi__item">
+                                                <div class="bg-c2 img-cir img-40">
+                                                    <i class="zmdi zmdi-account-box"></i>
+                                                </div>
+                                                <div class="content">
+                                                    <p>Your account has been blocked</p>
+                                                    <span class="date">April 12, 2018 06:50</span>
+                                                </div>
+                                            </div>
+                                            <div class="notifi__item">
+                                                <div class="bg-c3 img-cir img-40">
+                                                    <i class="zmdi zmdi-file-text"></i>
+                                                </div>
+                                                <div class="content">
+                                                    <p>You got a new file</p>
+                                                    <span class="date">April 12, 2018 06:50</span>
+                                                </div>
+                                            </div>
+                                            <div class="notifi__footer">
+                                                <a href="#">All notifications</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <div class="account-wrap">
+                                    <div class="account-item clearfix js-item-menu">
+                                        <div class="image">
+                                            <img src="images/icon/avatar-01.png" alt="UserImage" />
+                                        </div>
+                                        <div class="content">
+                                            <a class="js-acc-btn" href="#">Me</a>
+                                        </div>
+                                        <div class="account-dropdown js-dropdown">
+                                            <div class="info clearfix">
+                                                <div class="image">
+                                                    <a href="#">
+                                                        <img src="images/icon/avatar-01.png" alt="UserImage" />
+                                                    </a>
+                                                </div>
+                                                <div class="content">
+                                                    <h5 class="name">
+                                                        <p id="displayname"></p>
+                                                    </h5>
+                                                    <p id="displayemail" class="email"></p>
+                                                </div>
+                                            </div>
+                                            <div class="account-dropdown__body">
+                                                <div class="account-dropdown__item">
+                                                    <a href="profile.html">
+                                                        <i class="zmdi zmdi-account"></i>Profile Settings</a>
+                                                </div>
+                                             
+                                            </div>
+                                            <div class="account-dropdown__footer">
+                                                <a href="#" onclick="logout()">
+                                                    <i class="zmdi zmdi-power" onclick="logout()"></i>Logout</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- HEADER DESKTOP-->
+                    <div class="main-content">
+                           <div class="section__content section__content--p30">
+
+                                
+                                
+                                    
+                                   
+                                </div>
+                                    <div class="container-fluid">
+                                    
+                                   
+                                        <div class="row-md-12">
+                                            <div class="col-md-12">
+                                                <!-- DATA TABLE-->
+                                                <div class="table-responsive m-b-40">
+                                                    <table class="table table-borderless table-data3">
+                                                        <thead>
+                                                            <tr>
+                                        
+                                                                <th>Leave ID</th>
+                                                                <th>FromDate</th>
+                                                                <th>ToDate</th>
+                                                                
+                                                                <th>Leave Type</th> 
+                                                                <th>To Email</th>                                               
+                                                                <th>Reason</th>
+                                                                
+                                                                                                                                                        
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="spl">
+                                                                                                    
+                                                            
+                                                        </tbody>
+                                                        
+                                                    </table>
+                                                </div>
+                                                <!-- END DATA TABLE-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="copyright">
+                                            <strong><p>© Made with love by Siva Prakash!</p></strong>
+                                            <p>Mentored by Jithya Prasad</p>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    
+                        
+                    </div>
+
+                    
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Jquery JS-->
+    <script src="vendor/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap JS-->
+    <script src="vendor/bootstrap-4.1/popper.min.js"></script>
+    <script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
+    <!-- Vendor JS       -->
+    <script src="vendor/slick/slick.min.js">
+    </script>
+    <script src="vendor/wow/wow.min.js"></script>
+    <script src="vendor/animsition/animsition.min.js"></script>
+    <script src="vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
+    </script>
+    <script src="vendor/counter-up/jquery.waypoints.min.js"></script>
+    <script src="vendor/counter-up/jquery.counterup.min.js">
+    </script>
+    <script src="vendor/circle-progress/circle-progress.min.js"></script>
+    <script src="vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="vendor/chartjs/Chart.bundle.min.js"></script>
+    <script src="vendor/select2/select2.min.js">
+    </script>
+
+    <!-- Main JS-->
+    <script src="js/main.js"></script>
+
+
+<!-- <script type="text/javascript" src="../index.js"></script> -->
+
+<script type="text/javascript">
+	function checkToken() {
+		if (!localStorage.getItem('token')) {
+			window.location.href = '/';
+		}
+	}
+
+
+</script>
+</body>
+
+</html>
+<!-- end document-->

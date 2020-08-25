@@ -1,0 +1,27 @@
+Global Protect:
+ssivaprakash
+SivaPrakash@20&^!(19)
+
+KDS Login:
+abaper
+abap@123
+
+fortinet VPN:
+kaarintern01
+KC#int01%^&
+
+kaarintern02
+KC#int02&^%
+
+
+kaarintern03
+KC#int03$%#
+
+PO system URL:
+http://dxktpipo.kaarcloud.com:50000/dir
+POUSER
+Kaar2020
+
+Target URL: http://172.25.0.151:8000/sap/xi/engine?type=entry 
+
+https://www.youtube.com/watch?v=QSaoUxSvS5o

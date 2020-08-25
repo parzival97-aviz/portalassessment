@@ -1,0 +1,112 @@
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="icon" type="image/png" href="forms/images/icon/favicon.png">
+</head>
+
+<img src="forms/images/icon/logo-white.png" style="display: block;margin-left:auto; margin-right: auto; padding: 10px 10px; width: 215px; height: 75px;">
+
+<div class="background-wrap">
+  <div class="background"></div>
+</div>
+
+<form id="accesspanel" action="login" method="post">
+  <h1 id="litheader">Quality Check Portal</h1>
+  <div class="inset">
+    <p>
+      <input type="text" name="username" id="email" placeholder="Username">
+    </p>
+    <p>
+      <input type="password" name="password" id="password" placeholder="Access code">
+    </p>
+
+  <p class="p-container">
+    <input type="button" name="Login" id="go" onclick="callApi()" value="Authorize">
+    <p id="hello"></p>
+  </p>
+</form>
+
+<script type="text/javascript">
+  function callApi(){
+     user_email=document.getElementById("email").value;
+     user_password=document.getElementById("password").value;
+     const data = {
+      email: user_email,
+      password: user_password
+     };
+     const raw = JSON.stringify(data);
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+  const requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: raw,
+  redirect: 'follow'
+};
+
+      document.getElementById("go").value = "Initializing...";
+
+fetch("http://localhost:8000/qualitychecklogin", requestOptions)
+  .then(response => response.json())
+  .then(result => {
+    
+    console.log(result);
+    if(result.Status==='1 ')
+    {
+      localStorage.setItem('token', result.token);
+      localStorage.setItem('username', result.username);
+      document.getElementById("litheader").className = "poweron";
+      document.getElementById("go").className = "";
+      document.getElementById("go").value = "Logging In...";
+    setTimeout(() => {
+                    window.location.href = 'forms/dashboard.html';
+    }, 1500);
+      
+    } else    {
+      //p.textContent = `invalid Username or password`;
+    document.getElementById("litheader").className = "poweron";
+    document.getElementById("go").className = "denied";
+    document.getElementById("go").value = "Access Denied";
+
+    setTimeout(() => {
+      document.getElementById("litheader").className = "";
+      document.getElementById("go").className = "";
+      document.getElementById("go").value = "Try Again...";
+      setTimeout(() => {
+      document.getElementById("go").value = "Authorize";
+    }, 1500);
+    }, 3000);
+   
+    }
+    
+  })
+  .catch(error => console.log('error', error));
+
+};
+  $(document).ready(function() {
+
+    var state = false;
+
+    //$("input:text:visible:first").focus();
+
+    $('#accesspanel').on('submit', function(e) {
+
+        e.preventDefault();
+
+        state = !state;
+
+        if (state) {
+            document.getElementById("litheader").className = "poweron";
+            document.getElementById("go").className = "";
+            document.getElementById("go").value = "Initializing...";
+        }else{
+            document.getElementById("litheader").className = "";
+            document.getElementById("go").className = "denied";
+            document.getElementById("go").value = "Access Denied";
+        }
+
+    });
+
+});
+</script>
